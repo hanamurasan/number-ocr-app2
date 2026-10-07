@@ -7,7 +7,7 @@ from openpyxl import load_workbook
 from openpyxl.utils.cell import coordinate_from_string, column_index_from_string, get_column_letter
 
 st.set_page_config(page_title='測定値OCR 60枚対応', page_icon='🔢', layout='wide')
-st.title('🔢 測定値OCR 60枚対応版')
+st.title('🔢 測定値OCR 70枚対応版')
 st.caption('高速OCRを先に実行し、未検出画像だけ追加OCRします。同じ画像は再処理しません。')
 
 @st.cache_resource
@@ -73,8 +73,8 @@ def corrections_zip():
  return out.getvalue()
 
 excel=st.file_uploader('1. 入力先Excel',type=['xlsx'])
-files=sorted(st.file_uploader('2. 加工前写真を選択（最大60枚）',type=['png','jpg','jpeg','webp'],accept_multiple_files=True) or [],key=lambda f:timekey(f.name))
-if len(files)>60:st.error('一度に選択できるのは60枚までです。');st.stop()
+files=sorted(st.file_uploader('2. 加工前写真を選択（最大70枚）',type=['png','jpg','jpeg','webp'],accept_multiple_files=True) or [],key=lambda f:timekey(f.name))
+if len(files)>70:st.error('一度に選択できるのは70枚までです。');st.stop()
 if files:st.info(f'{len(files)}枚：'+' → '.join(f.name for f in files[:8])+(' …' if len(files)>8 else ''))
 if files and st.button('選択した写真をまとめて認識',type='primary'):
  bar=st.progress(0);status=st.empty()
