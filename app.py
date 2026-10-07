@@ -107,6 +107,11 @@ if st.session_state.corrections:
 if rows:
  st.dataframe(pd.DataFrame(rows),width='stretch')
  if excel:
+  default_output_name=f'{Path(excel.name).stem}_入力済み.xlsx'
+  output_name=st.text_input('ダウンロードするExcelのファイル名',default_output_name)
+  output_name=output_name.strip() or default_output_name
+  if not output_name.lower().endswith('.xlsx'):output_name += '.xlsx'
+  output_name=re.sub(r'[\\/:*?"<>|]+','_',output_name)
   wb=load_workbook(io.BytesIO(excel.getvalue()));sn=st.selectbox('入力シート',wb.sheetnames);start=st.text_input('開始セル','C4')
   if re.fullmatch(r'[A-Za-z]{1,3}[1-9][0-9]*',start.strip()):
    letters,r0=coordinate_from_string(start.upper());col=column_index_from_string(letters);ws=wb[sn];bad=[]
@@ -115,4 +120,4 @@ if rows:
     except:bad.append(row['filename'])
    if bad:st.error('未検出または無効な値：'+'、'.join(bad))
    else:
-    out=io.BytesIO();wb.save(out);end=f'{get_column_letter(col)}{r0+len(rows)-1}';st.success(f'{start.upper()}:{end}へ入力しました');st.download_button('入力済みExcelをダウンロード',out.getvalue(),f'{Path(excel.name).stem}_入力済み.xlsx')
+    out=io.BytesIO();wb.save(out);end=f'{get_column_letter(col)}{r0+len(rows)-1}';st.success(f'{start.upper()}:{end}へ入力しました');st.download_button('入力済みExcelをダウンロード',out.getvalue(),output_name,mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
